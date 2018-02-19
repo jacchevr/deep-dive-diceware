@@ -23,7 +23,7 @@ public class Test {
       System.out.println("Not enough words in the word list.");
     } catch (IllegalArgumentException ex) {
       // TODO Assume we've logged this or done something else interesting with ex.
-      throw ex;
+      
 //      System.out.println("You can't have a negative-length passphrase!!!!");
     } finally {
       System.out.println("Well, now we're done.");
