@@ -1,1 +1,1 @@
-typeSearchIndex = [{"p":"edu.cnm.deepdive.security","l":"Diceware"}]
+typeSearchIndex = [{"p":"edu.cnm.deepdive.security","l":"Diceware"},{"p":"edu.cnm.deepdive.security","l":"Diceware.InsufficientPoolException"}]
