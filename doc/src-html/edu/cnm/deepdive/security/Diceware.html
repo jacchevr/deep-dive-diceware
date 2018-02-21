@@ -45,164 +45,168 @@
 <span class="sourceLineNo">037</span><a name="line.37">  private Random rng = null;</a>
 <span class="sourceLineNo">038</span><a name="line.38"></a>
 <span class="sourceLineNo">039</span><a name="line.39">  /**</a>
-<span class="sourceLineNo">040</span><a name="line.40">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a reference to a {@link java.io.File}</a>
-<span class="sourceLineNo">041</span><a name="line.41">   * object. If the &lt;code&gt;File&lt;/code&gt; does not exist, of cannot be read, an exception will be</a>
-<span class="sourceLineNo">042</span><a name="line.42">   * thrown.</a>
-<span class="sourceLineNo">043</span><a name="line.43">   * </a>
-<span class="sourceLineNo">044</span><a name="line.44">   * @param file file to read for word list.</a>
-<span class="sourceLineNo">045</span><a name="line.45">   * @throws FileNotFoundException if file does not exist.</a>
-<span class="sourceLineNo">046</span><a name="line.46">   * @throws IOException if file can't be read.</a>
-<span class="sourceLineNo">047</span><a name="line.47">   */</a>
-<span class="sourceLineNo">048</span><a name="line.48"></a>
-<span class="sourceLineNo">049</span><a name="line.49">  public Diceware() {</a>
-<span class="sourceLineNo">050</span><a name="line.50">    this(ResourceBundle.getBundle(DEFAULT_RESOURCE_BUNDLE));</a>
-<span class="sourceLineNo">051</span><a name="line.51">  }</a>
-<span class="sourceLineNo">052</span><a name="line.52"></a>
-<span class="sourceLineNo">053</span><a name="line.53">  public Diceware(File file) throws FileNotFoundException, IOException {</a>
-<span class="sourceLineNo">054</span><a name="line.54">    words = new ArrayList&lt;&gt;();</a>
-<span class="sourceLineNo">055</span><a name="line.55">    try (FileInputStream input = new FileInputStream(file);</a>
-<span class="sourceLineNo">056</span><a name="line.56">        InputStreamReader reader = new InputStreamReader(input);</a>
-<span class="sourceLineNo">057</span><a name="line.57">        BufferedReader buffer = new BufferedReader(reader);) {</a>
-<span class="sourceLineNo">058</span><a name="line.58">      Pattern p = Pattern.compile(LINE_PATTERN);</a>
-<span class="sourceLineNo">059</span><a name="line.59">      for (String line = buffer.readLine(); line != null; line = buffer.readLine()) {</a>
-<span class="sourceLineNo">060</span><a name="line.60">        Matcher m = p.matcher(line);</a>
-<span class="sourceLineNo">061</span><a name="line.61">        if (m.matches()) {</a>
-<span class="sourceLineNo">062</span><a name="line.62">          words.add(m.group(2));</a>
-<span class="sourceLineNo">063</span><a name="line.63">        }</a>
-<span class="sourceLineNo">064</span><a name="line.64">      }</a>
-<span class="sourceLineNo">065</span><a name="line.65">    }</a>
-<span class="sourceLineNo">066</span><a name="line.66">  }</a>
-<span class="sourceLineNo">067</span><a name="line.67"></a>
-<span class="sourceLineNo">068</span><a name="line.68">  /**</a>
-<span class="sourceLineNo">069</span><a name="line.69">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a {@link Collection} as the source of</a>
-<span class="sourceLineNo">070</span><a name="line.70">   * words for the word list.</a>
-<span class="sourceLineNo">071</span><a name="line.71">   * </a>
-<span class="sourceLineNo">072</span><a name="line.72">   * @param source word list source.</a>
-<span class="sourceLineNo">073</span><a name="line.73">   */</a>
-<span class="sourceLineNo">074</span><a name="line.74">  public Diceware(Collection&lt;String&gt; source) {</a>
-<span class="sourceLineNo">075</span><a name="line.75">    words = new ArrayList&lt;&gt;(source);</a>
-<span class="sourceLineNo">076</span><a name="line.76">  }</a>
-<span class="sourceLineNo">077</span><a name="line.77"></a>
-<span class="sourceLineNo">078</span><a name="line.78">  /**</a>
-<span class="sourceLineNo">079</span><a name="line.79">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a {@link ResourceBundle} object as the</a>
-<span class="sourceLineNo">080</span><a name="line.80">   * source of words for the word list. (The property values from the &lt;code&gt;ResourceBundle&lt;/code&gt;</a>
-<span class="sourceLineNo">081</span><a name="line.81">   * are taken as the words; the property names/keys are ignored.)</a>
-<span class="sourceLineNo">082</span><a name="line.82">   * </a>
-<span class="sourceLineNo">083</span><a name="line.83">   * @param bundle properties provided words (values) for word list.</a>
-<span class="sourceLineNo">084</span><a name="line.84">   */</a>
-<span class="sourceLineNo">085</span><a name="line.85">  public Diceware(ResourceBundle bundle) {</a>
-<span class="sourceLineNo">086</span><a name="line.86">    words = new ArrayList&lt;&gt;();</a>
-<span class="sourceLineNo">087</span><a name="line.87">    Enumeration&lt;String&gt; en = bundle.getKeys();</a>
-<span class="sourceLineNo">088</span><a name="line.88">    while (en.hasMoreElements()) {</a>
-<span class="sourceLineNo">089</span><a name="line.89">      words.add(bundle.getString(en.nextElement()));</a>
-<span class="sourceLineNo">090</span><a name="line.90">    }</a>
-<span class="sourceLineNo">091</span><a name="line.91">  }</a>
-<span class="sourceLineNo">092</span><a name="line.92"></a>
-<span class="sourceLineNo">093</span><a name="line.93">  /**</a>
-<span class="sourceLineNo">094</span><a name="line.94">   * Initializes (if necessary) and returns the {@link Random} instance to be used for selecting</a>
-<span class="sourceLineNo">095</span><a name="line.95">   * words from the word list.</a>
-<span class="sourceLineNo">096</span><a name="line.96">   * </a>
-<span class="sourceLineNo">097</span><a name="line.97">   * @return pseudo-random number generator instance.</a>
-<span class="sourceLineNo">098</span><a name="line.98">   * @throws NoSuchAlgorithmException if lazy initialization is used, and default strong provider</a>
-<span class="sourceLineNo">099</span><a name="line.99">   *         algorithm does not exist.</a>
-<span class="sourceLineNo">100</span><a name="line.100">   */</a>
-<span class="sourceLineNo">101</span><a name="line.101">  public Random getRng() throws NoSuchAlgorithmException {</a>
-<span class="sourceLineNo">102</span><a name="line.102">    if (rng == null) {</a>
-<span class="sourceLineNo">103</span><a name="line.103">      rng = SecureRandom.getInstanceStrong();</a>
-<span class="sourceLineNo">104</span><a name="line.104">    }</a>
-<span class="sourceLineNo">105</span><a name="line.105">    return rng;</a>
-<span class="sourceLineNo">106</span><a name="line.106">  }</a>
-<span class="sourceLineNo">107</span><a name="line.107"></a>
-<span class="sourceLineNo">108</span><a name="line.108">  /**</a>
-<span class="sourceLineNo">109</span><a name="line.109">   * Sets a reference to the {@link Random} instance to be used for selecting words from the word</a>
-<span class="sourceLineNo">110</span><a name="line.110">   * list.</a>
-<span class="sourceLineNo">111</span><a name="line.111">   * </a>
-<span class="sourceLineNo">112</span><a name="line.112">   * @param rng pseudo-random number generator instance.</a>
-<span class="sourceLineNo">113</span><a name="line.113">   */</a>
-<span class="sourceLineNo">114</span><a name="line.114">  public void setRng(Random rng) {</a>
-<span class="sourceLineNo">115</span><a name="line.115">    this.rng = rng;</a>
-<span class="sourceLineNo">116</span><a name="line.116">  }</a>
-<span class="sourceLineNo">117</span><a name="line.117"></a>
-<span class="sourceLineNo">118</span><a name="line.118">  /**</a>
-<span class="sourceLineNo">119</span><a name="line.119">   * Generates and returns (in a &lt;code&gt;String[]&lt;/code&gt;) a password of the specified length. The</a>
-<span class="sourceLineNo">120</span><a name="line.120">   * inclusion of duplicates is controlled by the &lt;code&gt;duplicatesAllowed&lt;/code&gt; argument. If the</a>
-<span class="sourceLineNo">121</span><a name="line.121">   * specified length is greater than the number of words in the word list, and duplicates aren't</a>
-<span class="sourceLineNo">122</span><a name="line.122">   * allowed, then an infinite loop will result.</a>
-<span class="sourceLineNo">123</span><a name="line.123">   * </a>
-<span class="sourceLineNo">124</span><a name="line.124">   * @param length number of words to include in generated passphrase.</a>
-<span class="sourceLineNo">125</span><a name="line.125">   * @param duplicatesAllowed true if duplicate words are allowed; false otherwise.</a>
-<span class="sourceLineNo">126</span><a name="line.126">   * @return words in generated passphrase.</a>
-<span class="sourceLineNo">127</span><a name="line.127">   * @throws NoSuchAlgorithmException if algorithm for default strong source of randomness is not</a>
-<span class="sourceLineNo">128</span><a name="line.128">   *         available.</a>
-<span class="sourceLineNo">129</span><a name="line.129">   * @throws InsufficientPoolException if password length exceeds word list, and duplicates not</a>
-<span class="sourceLineNo">130</span><a name="line.130">   *         allowed or word list has no words.</a>
-<span class="sourceLineNo">131</span><a name="line.131">   * @throws IllegalArgumentException if requested length is not positive.</a>
-<span class="sourceLineNo">132</span><a name="line.132">   */</a>
-<span class="sourceLineNo">133</span><a name="line.133">  public String[] generate(int length, boolean duplicatesAllowed)</a>
-<span class="sourceLineNo">134</span><a name="line.134">      throws NoSuchAlgorithmException, InsufficientPoolException, IllegalArgumentException {</a>
-<span class="sourceLineNo">135</span><a name="line.135">    if (length &lt;= 0) {</a>
-<span class="sourceLineNo">136</span><a name="line.136">      throw new IllegalArgumentException(NEGATIVE_PASSPHRASE_MESSAGE);</a>
-<span class="sourceLineNo">137</span><a name="line.137">    }</a>
-<span class="sourceLineNo">138</span><a name="line.138">    if ((words.size() == 0 &amp;&amp; length &gt; 0) || (!duplicatesAllowed &amp;&amp; length &gt; words.size())) {</a>
-<span class="sourceLineNo">139</span><a name="line.139">      throw new InsufficientPoolException();</a>
-<span class="sourceLineNo">140</span><a name="line.140">    }</a>
-<span class="sourceLineNo">141</span><a name="line.141">    List&lt;String&gt; passphrase = new LinkedList&lt;&gt;();</a>
-<span class="sourceLineNo">142</span><a name="line.142">    while (passphrase.size() &lt; length) {</a>
-<span class="sourceLineNo">143</span><a name="line.143">      String word = generate();</a>
-<span class="sourceLineNo">144</span><a name="line.144">      if (duplicatesAllowed || !passphrase.contains(word)) {</a>
-<span class="sourceLineNo">145</span><a name="line.145">        passphrase.add(word);</a>
-<span class="sourceLineNo">146</span><a name="line.146">      }</a>
-<span class="sourceLineNo">147</span><a name="line.147">    }</a>
-<span class="sourceLineNo">148</span><a name="line.148">    return passphrase.toArray(new String[passphrase.size()]);</a>
-<span class="sourceLineNo">149</span><a name="line.149">  }</a>
-<span class="sourceLineNo">150</span><a name="line.150"></a>
-<span class="sourceLineNo">151</span><a name="line.151">  /**</a>
-<span class="sourceLineNo">152</span><a name="line.152">   * Generates and returns (in a &lt;code&gt;String[]&lt;/code&gt;) a password of the specified length. This</a>
-<span class="sourceLineNo">153</span><a name="line.153">   * method simply invokes {@link #generate(int, boolean) generate(length, true)} &amp;ndash; that is,</a>
-<span class="sourceLineNo">154</span><a name="line.154">   * it invokes {@link #generate(int, boolean)}, specifying that duplicates are allowed.</a>
-<span class="sourceLineNo">155</span><a name="line.155">   * </a>
-<span class="sourceLineNo">156</span><a name="line.156">   * @param length number of words to include in generated passphrase.</a>
-<span class="sourceLineNo">157</span><a name="line.157">   * @return words in generated passphrase.</a>
-<span class="sourceLineNo">158</span><a name="line.158">   * @throws NoSuchAlgorithmException if algorithm for default strong source of randomness is not</a>
-<span class="sourceLineNo">159</span><a name="line.159">   *         available.</a>
-<span class="sourceLineNo">160</span><a name="line.160">   * @throws InsufficientPoolException if word list has no words.</a>
-<span class="sourceLineNo">161</span><a name="line.161">   * @throws IllegalArgumentException if requested length is negative.</a>
-<span class="sourceLineNo">162</span><a name="line.162">   */</a>
-<span class="sourceLineNo">163</span><a name="line.163">  public String[] generate(int length)</a>
-<span class="sourceLineNo">164</span><a name="line.164">      throws NoSuchAlgorithmException, InsufficientPoolException, IllegalArgumentException {</a>
-<span class="sourceLineNo">165</span><a name="line.165">    return generate(length, true);</a>
-<span class="sourceLineNo">166</span><a name="line.166">  }</a>
-<span class="sourceLineNo">167</span><a name="line.167"></a>
-<span class="sourceLineNo">168</span><a name="line.168">  public String generate(int length, String delimiter)</a>
-<span class="sourceLineNo">169</span><a name="line.169">      throws InsufficientPoolException, NoSuchAlgorithmException, IllegalArgumentException {</a>
-<span class="sourceLineNo">170</span><a name="line.170">    return generate(length, delimiter, true);</a>
-<span class="sourceLineNo">171</span><a name="line.171">  }</a>
-<span class="sourceLineNo">172</span><a name="line.172"></a>
-<span class="sourceLineNo">173</span><a name="line.173">  public String generate(int length, String delimiter, boolean duplicatesAllowed)</a>
-<span class="sourceLineNo">174</span><a name="line.174">      throws InsufficientPoolException, NoSuchAlgorithmException, IllegalArgumentException {</a>
-<span class="sourceLineNo">175</span><a name="line.175">    String[] words = generate(length, duplicatesAllowed);</a>
-<span class="sourceLineNo">176</span><a name="line.176">    StringBuilder builder = new StringBuilder(words[0]);</a>
-<span class="sourceLineNo">177</span><a name="line.177">    for (int i = 1; i &lt; words.length; i++) {</a>
-<span class="sourceLineNo">178</span><a name="line.178">      builder.append(delimiter);</a>
-<span class="sourceLineNo">179</span><a name="line.179">      builder.append(words[i]);</a>
-<span class="sourceLineNo">180</span><a name="line.180">    }</a>
-<span class="sourceLineNo">181</span><a name="line.181">    return builder.toString();</a>
-<span class="sourceLineNo">182</span><a name="line.182">  }</a>
-<span class="sourceLineNo">183</span><a name="line.183"></a>
-<span class="sourceLineNo">184</span><a name="line.184">  private String generate() throws NoSuchAlgorithmException {</a>
-<span class="sourceLineNo">185</span><a name="line.185">    int index = getRng().nextInt(words.size());</a>
-<span class="sourceLineNo">186</span><a name="line.186">    return words.get(index);</a>
-<span class="sourceLineNo">187</span><a name="line.187">  }</a>
-<span class="sourceLineNo">188</span><a name="line.188"></a>
-<span class="sourceLineNo">189</span><a name="line.189">  public static class InsufficientPoolException extends IllegalArgumentException {</a>
-<span class="sourceLineNo">190</span><a name="line.190"></a>
-<span class="sourceLineNo">191</span><a name="line.191">    private InsufficientPoolException() {</a>
+<span class="sourceLineNo">040</span><a name="line.40">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a reference to a &lt;code&gt;ResourceBundle&lt;/code&gt;.</a>
+<span class="sourceLineNo">041</span><a name="line.41">   */</a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43">  public Diceware() {</a>
+<span class="sourceLineNo">044</span><a name="line.44">    this(ResourceBundle.getBundle(DEFAULT_RESOURCE_BUNDLE));</a>
+<span class="sourceLineNo">045</span><a name="line.45">  }</a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47">  /**</a>
+<span class="sourceLineNo">048</span><a name="line.48">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a reference to a {@link java.io.File}</a>
+<span class="sourceLineNo">049</span><a name="line.49">   * object. If the &lt;code&gt;File&lt;/code&gt; does not exist, of cannot be read, an exception will be</a>
+<span class="sourceLineNo">050</span><a name="line.50">   * thrown.</a>
+<span class="sourceLineNo">051</span><a name="line.51">   * </a>
+<span class="sourceLineNo">052</span><a name="line.52">   * @param file file to read for word list.</a>
+<span class="sourceLineNo">053</span><a name="line.53">   * @throws FileNotFoundException if file does not exist.</a>
+<span class="sourceLineNo">054</span><a name="line.54">   * @throws IOException if file can't be read.</a>
+<span class="sourceLineNo">055</span><a name="line.55">   */</a>
+<span class="sourceLineNo">056</span><a name="line.56">  </a>
+<span class="sourceLineNo">057</span><a name="line.57">  public Diceware(File file) throws FileNotFoundException, IOException {</a>
+<span class="sourceLineNo">058</span><a name="line.58">    words = new ArrayList&lt;&gt;();</a>
+<span class="sourceLineNo">059</span><a name="line.59">    try (FileInputStream input = new FileInputStream(file);</a>
+<span class="sourceLineNo">060</span><a name="line.60">        InputStreamReader reader = new InputStreamReader(input);</a>
+<span class="sourceLineNo">061</span><a name="line.61">        BufferedReader buffer = new BufferedReader(reader);) {</a>
+<span class="sourceLineNo">062</span><a name="line.62">      Pattern p = Pattern.compile(LINE_PATTERN);</a>
+<span class="sourceLineNo">063</span><a name="line.63">      for (String line = buffer.readLine(); line != null; line = buffer.readLine()) {</a>
+<span class="sourceLineNo">064</span><a name="line.64">        Matcher m = p.matcher(line);</a>
+<span class="sourceLineNo">065</span><a name="line.65">        if (m.matches()) {</a>
+<span class="sourceLineNo">066</span><a name="line.66">          words.add(m.group(2));</a>
+<span class="sourceLineNo">067</span><a name="line.67">        }</a>
+<span class="sourceLineNo">068</span><a name="line.68">      }</a>
+<span class="sourceLineNo">069</span><a name="line.69">    }</a>
+<span class="sourceLineNo">070</span><a name="line.70">  }</a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72">  /**</a>
+<span class="sourceLineNo">073</span><a name="line.73">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a {@link Collection} as the source of</a>
+<span class="sourceLineNo">074</span><a name="line.74">   * words for the word list.</a>
+<span class="sourceLineNo">075</span><a name="line.75">   * </a>
+<span class="sourceLineNo">076</span><a name="line.76">   * @param source word list source.</a>
+<span class="sourceLineNo">077</span><a name="line.77">   */</a>
+<span class="sourceLineNo">078</span><a name="line.78">  public Diceware(Collection&lt;String&gt; source) {</a>
+<span class="sourceLineNo">079</span><a name="line.79">    words = new ArrayList&lt;&gt;(source);</a>
+<span class="sourceLineNo">080</span><a name="line.80">  }</a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82">  /**</a>
+<span class="sourceLineNo">083</span><a name="line.83">   * Initializes an instance of &lt;code&gt;Diceware&lt;/code&gt; using a {@link ResourceBundle} object as the</a>
+<span class="sourceLineNo">084</span><a name="line.84">   * source of words for the word list. (The property values from the &lt;code&gt;ResourceBundle&lt;/code&gt;</a>
+<span class="sourceLineNo">085</span><a name="line.85">   * are taken as the words; the property names/keys are ignored.)</a>
+<span class="sourceLineNo">086</span><a name="line.86">   * </a>
+<span class="sourceLineNo">087</span><a name="line.87">   * @param bundle properties provided words (values) for word list.</a>
+<span class="sourceLineNo">088</span><a name="line.88">   */</a>
+<span class="sourceLineNo">089</span><a name="line.89">  public Diceware(ResourceBundle bundle) {</a>
+<span class="sourceLineNo">090</span><a name="line.90">    words = new ArrayList&lt;&gt;();</a>
+<span class="sourceLineNo">091</span><a name="line.91">    Enumeration&lt;String&gt; en = bundle.getKeys();</a>
+<span class="sourceLineNo">092</span><a name="line.92">    while (en.hasMoreElements()) {</a>
+<span class="sourceLineNo">093</span><a name="line.93">      words.add(bundle.getString(en.nextElement()));</a>
+<span class="sourceLineNo">094</span><a name="line.94">    }</a>
+<span class="sourceLineNo">095</span><a name="line.95">  }</a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97">  /**</a>
+<span class="sourceLineNo">098</span><a name="line.98">   * Initializes (if necessary) and returns the {@link Random} instance to be used for selecting</a>
+<span class="sourceLineNo">099</span><a name="line.99">   * words from the word list.</a>
+<span class="sourceLineNo">100</span><a name="line.100">   * </a>
+<span class="sourceLineNo">101</span><a name="line.101">   * @return pseudo-random number generator instance.</a>
+<span class="sourceLineNo">102</span><a name="line.102">   * @throws NoSuchAlgorithmException if lazy initialization is used, and default strong provider</a>
+<span class="sourceLineNo">103</span><a name="line.103">   *         algorithm does not exist.</a>
+<span class="sourceLineNo">104</span><a name="line.104">   */</a>
+<span class="sourceLineNo">105</span><a name="line.105">  public Random getRng() throws NoSuchAlgorithmException {</a>
+<span class="sourceLineNo">106</span><a name="line.106">    if (rng == null) {</a>
+<span class="sourceLineNo">107</span><a name="line.107">      rng = SecureRandom.getInstanceStrong();</a>
+<span class="sourceLineNo">108</span><a name="line.108">    }</a>
+<span class="sourceLineNo">109</span><a name="line.109">    return rng;</a>
+<span class="sourceLineNo">110</span><a name="line.110">  }</a>
+<span class="sourceLineNo">111</span><a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112">  /**</a>
+<span class="sourceLineNo">113</span><a name="line.113">   * Sets a reference to the {@link Random} instance to be used for selecting words from the word</a>
+<span class="sourceLineNo">114</span><a name="line.114">   * list.</a>
+<span class="sourceLineNo">115</span><a name="line.115">   * </a>
+<span class="sourceLineNo">116</span><a name="line.116">   * @param rng pseudo-random number generator instance.</a>
+<span class="sourceLineNo">117</span><a name="line.117">   */</a>
+<span class="sourceLineNo">118</span><a name="line.118">  public void setRng(Random rng) {</a>
+<span class="sourceLineNo">119</span><a name="line.119">    this.rng = rng;</a>
+<span class="sourceLineNo">120</span><a name="line.120">  }</a>
+<span class="sourceLineNo">121</span><a name="line.121"></a>
+<span class="sourceLineNo">122</span><a name="line.122">  /**</a>
+<span class="sourceLineNo">123</span><a name="line.123">   * Generates and returns (in a &lt;code&gt;String[]&lt;/code&gt;) a password of the specified length. The</a>
+<span class="sourceLineNo">124</span><a name="line.124">   * inclusion of duplicates is controlled by the &lt;code&gt;duplicatesAllowed&lt;/code&gt; argument. If the</a>
+<span class="sourceLineNo">125</span><a name="line.125">   * specified length is greater than the number of words in the word list, and duplicates aren't</a>
+<span class="sourceLineNo">126</span><a name="line.126">   * allowed, then an infinite loop will result.</a>
+<span class="sourceLineNo">127</span><a name="line.127">   * </a>
+<span class="sourceLineNo">128</span><a name="line.128">   * @param length number of words to include in generated passphrase.</a>
+<span class="sourceLineNo">129</span><a name="line.129">   * @param duplicatesAllowed true if duplicate words are allowed; false otherwise.</a>
+<span class="sourceLineNo">130</span><a name="line.130">   * @return words in generated passphrase.</a>
+<span class="sourceLineNo">131</span><a name="line.131">   * @throws NoSuchAlgorithmException if algorithm for default strong source of randomness is not</a>
+<span class="sourceLineNo">132</span><a name="line.132">   *         available.</a>
+<span class="sourceLineNo">133</span><a name="line.133">   * @throws InsufficientPoolException if password length exceeds word list, and duplicates not</a>
+<span class="sourceLineNo">134</span><a name="line.134">   *         allowed or word list has no words.</a>
+<span class="sourceLineNo">135</span><a name="line.135">   * @throws IllegalArgumentException if requested length is not positive.</a>
+<span class="sourceLineNo">136</span><a name="line.136">   */</a>
+<span class="sourceLineNo">137</span><a name="line.137">  public String[] generate(int length, boolean duplicatesAllowed)</a>
+<span class="sourceLineNo">138</span><a name="line.138">      throws NoSuchAlgorithmException, InsufficientPoolException, IllegalArgumentException {</a>
+<span class="sourceLineNo">139</span><a name="line.139">    if (length &lt;= 0) {</a>
+<span class="sourceLineNo">140</span><a name="line.140">      throw new IllegalArgumentException(NEGATIVE_PASSPHRASE_MESSAGE);</a>
+<span class="sourceLineNo">141</span><a name="line.141">    }</a>
+<span class="sourceLineNo">142</span><a name="line.142">    if ((words.size() == 0 &amp;&amp; length &gt; 0) || (!duplicatesAllowed &amp;&amp; length &gt; words.size())) {</a>
+<span class="sourceLineNo">143</span><a name="line.143">      throw new InsufficientPoolException();</a>
+<span class="sourceLineNo">144</span><a name="line.144">    }</a>
+<span class="sourceLineNo">145</span><a name="line.145">    List&lt;String&gt; passphrase = new LinkedList&lt;&gt;();</a>
+<span class="sourceLineNo">146</span><a name="line.146">    while (passphrase.size() &lt; length) {</a>
+<span class="sourceLineNo">147</span><a name="line.147">      String word = generate();</a>
+<span class="sourceLineNo">148</span><a name="line.148">      if (duplicatesAllowed || !passphrase.contains(word)) {</a>
+<span class="sourceLineNo">149</span><a name="line.149">        passphrase.add(word);</a>
+<span class="sourceLineNo">150</span><a name="line.150">      }</a>
+<span class="sourceLineNo">151</span><a name="line.151">    }</a>
+<span class="sourceLineNo">152</span><a name="line.152">    return passphrase.toArray(new String[passphrase.size()]);</a>
+<span class="sourceLineNo">153</span><a name="line.153">  }</a>
+<span class="sourceLineNo">154</span><a name="line.154"></a>
+<span class="sourceLineNo">155</span><a name="line.155">  /**</a>
+<span class="sourceLineNo">156</span><a name="line.156">   * Generates and returns (in a &lt;code&gt;String[]&lt;/code&gt;) a password of the specified length. This</a>
+<span class="sourceLineNo">157</span><a name="line.157">   * method simply invokes {@link #generate(int, boolean) generate(length, true)} &amp;ndash; that is,</a>
+<span class="sourceLineNo">158</span><a name="line.158">   * it invokes {@link #generate(int, boolean)}, specifying that duplicates are allowed.</a>
+<span class="sourceLineNo">159</span><a name="line.159">   * </a>
+<span class="sourceLineNo">160</span><a name="line.160">   * @param length number of words to include in generated passphrase.</a>
+<span class="sourceLineNo">161</span><a name="line.161">   * @return words in generated passphrase.</a>
+<span class="sourceLineNo">162</span><a name="line.162">   * @throws NoSuchAlgorithmException if algorithm for default strong source of randomness is not</a>
+<span class="sourceLineNo">163</span><a name="line.163">   *         available.</a>
+<span class="sourceLineNo">164</span><a name="line.164">   * @throws InsufficientPoolException if word list has no words.</a>
+<span class="sourceLineNo">165</span><a name="line.165">   * @throws IllegalArgumentException if requested length is negative.</a>
+<span class="sourceLineNo">166</span><a name="line.166">   */</a>
+<span class="sourceLineNo">167</span><a name="line.167">  public String[] generate(int length)</a>
+<span class="sourceLineNo">168</span><a name="line.168">      throws NoSuchAlgorithmException, InsufficientPoolException, IllegalArgumentException {</a>
+<span class="sourceLineNo">169</span><a name="line.169">    return generate(length, true);</a>
+<span class="sourceLineNo">170</span><a name="line.170">  }</a>
+<span class="sourceLineNo">171</span><a name="line.171"></a>
+<span class="sourceLineNo">172</span><a name="line.172">  public String generate(int length, String delimiter)</a>
+<span class="sourceLineNo">173</span><a name="line.173">      throws InsufficientPoolException, NoSuchAlgorithmException, IllegalArgumentException {</a>
+<span class="sourceLineNo">174</span><a name="line.174">    return generate(length, delimiter, true);</a>
+<span class="sourceLineNo">175</span><a name="line.175">  }</a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span><a name="line.177">  public String generate(int length, String delimiter, boolean duplicatesAllowed)</a>
+<span class="sourceLineNo">178</span><a name="line.178">      throws InsufficientPoolException, NoSuchAlgorithmException, IllegalArgumentException {</a>
+<span class="sourceLineNo">179</span><a name="line.179">    String[] words = generate(length, duplicatesAllowed);</a>
+<span class="sourceLineNo">180</span><a name="line.180">    StringBuilder builder = new StringBuilder(words[0]);</a>
+<span class="sourceLineNo">181</span><a name="line.181">    for (int i = 1; i &lt; words.length; i++) {</a>
+<span class="sourceLineNo">182</span><a name="line.182">      builder.append(delimiter);</a>
+<span class="sourceLineNo">183</span><a name="line.183">      builder.append(words[i]);</a>
+<span class="sourceLineNo">184</span><a name="line.184">    }</a>
+<span class="sourceLineNo">185</span><a name="line.185">    return builder.toString();</a>
+<span class="sourceLineNo">186</span><a name="line.186">  }</a>
+<span class="sourceLineNo">187</span><a name="line.187"></a>
+<span class="sourceLineNo">188</span><a name="line.188">  private String generate() throws NoSuchAlgorithmException {</a>
+<span class="sourceLineNo">189</span><a name="line.189">    int index = getRng().nextInt(words.size());</a>
+<span class="sourceLineNo">190</span><a name="line.190">    return words.get(index);</a>
+<span class="sourceLineNo">191</span><a name="line.191">  }</a>
 <span class="sourceLineNo">192</span><a name="line.192"></a>
-<span class="sourceLineNo">193</span><a name="line.193">    }</a>
+<span class="sourceLineNo">193</span><a name="line.193">  public static class InsufficientPoolException extends IllegalArgumentException {</a>
 <span class="sourceLineNo">194</span><a name="line.194"></a>
-<span class="sourceLineNo">195</span><a name="line.195">  }</a>
+<span class="sourceLineNo">195</span><a name="line.195">    private InsufficientPoolException() {</a>
 <span class="sourceLineNo">196</span><a name="line.196"></a>
-<span class="sourceLineNo">197</span><a name="line.197">}</a>
+<span class="sourceLineNo">197</span><a name="line.197">    }</a>
+<span class="sourceLineNo">198</span><a name="line.198"></a>
+<span class="sourceLineNo">199</span><a name="line.199">  }</a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span><a name="line.201">}</a>
 
 
 

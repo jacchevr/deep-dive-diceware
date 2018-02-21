@@ -37,6 +37,14 @@ public class Diceware {
   private Random rng = null;
 
   /**
+   * Initializes an instance of <code>Diceware</code> using a reference to a <code>ResourceBundle</code>.
+   */
+
+  public Diceware() {
+    this(ResourceBundle.getBundle(DEFAULT_RESOURCE_BUNDLE));
+  }
+
+  /**
    * Initializes an instance of <code>Diceware</code> using a reference to a {@link java.io.File}
    * object. If the <code>File</code> does not exist, of cannot be read, an exception will be
    * thrown.
@@ -45,11 +53,7 @@ public class Diceware {
    * @throws FileNotFoundException if file does not exist.
    * @throws IOException if file can't be read.
    */
-
-  public Diceware() {
-    this(ResourceBundle.getBundle(DEFAULT_RESOURCE_BUNDLE));
-  }
-
+  
   public Diceware(File file) throws FileNotFoundException, IOException {
     words = new ArrayList<>();
     try (FileInputStream input = new FileInputStream(file);
