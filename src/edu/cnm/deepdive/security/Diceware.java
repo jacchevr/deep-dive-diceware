@@ -104,7 +104,7 @@ public class Diceware {
    */
   public Random getRng() throws NoSuchAlgorithmException {
     if (rng == null) {
-      rng = SecureRandom.getInstanceStrong();
+      rng = new SecureRandom();
     }
     return rng;
   }
